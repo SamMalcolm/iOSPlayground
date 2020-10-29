@@ -41,6 +41,7 @@ class MotionManager: ObservableObject {
                 self.yarr.append(magnetData.magneticField.y)
                 self.z = magnetData.magneticField.z
                 self.zarr.append(magnetData.magneticField.z)
+                print("\(self.x) | \(self.y) | \(self.z)")
             }
 
         }
@@ -64,8 +65,6 @@ struct ContentView: View {
                 Text("test")
             }
             Text("Pressed \(counter) times!")
-            Text("\(motion.xarr[0])")
-            //Text("\(motion.xarr)")
             
             Spacer()
                 
