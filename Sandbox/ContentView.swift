@@ -8,67 +8,45 @@
 import SwiftUI
 import Foundation
 import Combine
-import CoreMotion
-
-class MotionManager: ObservableObject {
-
-    private var motionManager: CMMotionManager
-
-    @Published
-    var x: Double = 0.0
-    @Published
-    var y: Double = 0.0
-    @Published
-    var z: Double = 0.0
-
-    @Published var xarr: [Double] = []
-    @Published var yarr: [Double] = []
-    @Published var zarr: [Double] = []
-    
-    init() {
-        self.motionManager = CMMotionManager()
-        self.motionManager.magnetometerUpdateInterval = 1/60
-        self.motionManager.startMagnetometerUpdates(to: .main) { (magnetometerData, error) in
-            guard error == nil else {
-                print(error!)
-                return
-            }
-
-            if let magnetData = magnetometerData {
-                self.x = magnetData.magneticField.x
-                self.xarr.append(magnetData.magneticField.x)
-                self.y = magnetData.magneticField.y
-                self.yarr.append(magnetData.magneticField.y)
-                self.z = magnetData.magneticField.z
-                self.zarr.append(magnetData.magneticField.z)
-                print("\(self.x) | \(self.y) | \(self.z)")
-            }
-
-        }
-
-    }
-}
 
 struct ContentView: View {
     @State var counter:Int = 0
     @ObservedObject
         var motion: MotionManager
+    
     var body: some View {
         VStack {
-
             Text("Hello, Sam!")
-            Text("Magnetometer Data")
-            Text("X: \(motion.x)")
-            Text("Y: \(motion.y)")
-            Text("Z: \(motion.z)")
+            Group{
+                Text("Magnetometer Data")
+                Text("X: \(motion.magneticField.x)")
+                Text("Y: \(motion.magneticField.y)")
+                Text("Z: \(motion.magneticField.z)")
+            }
+            Group{
+                Text("Accelorometer Data")
+                Text("X: \(motion.accelorometerResults.x)")
+                Text("Y: \(motion.accelorometerResults.y)")
+                Text("Z: \(motion.accelorometerResults.z)")
+            }
+            Group{
+                Text("Gyroscope Data")
+                Text("X: \(motion.gyroscopeResults.x)")
+                Text("Y: \(motion.gyroscopeResults.y)")
+                Text("Z: \(motion.gyroscopeResults.z)")
+            }
             Button(action: {self.counter+=1}) {
                 Text("test")
             }
             Text("Pressed \(counter) times!")
             
             Spacer()
-                
-        
+            Button(action: {
+                let impactMed = UIImpactFeedbackGenerator(style: .heavy)
+                impactMed.impactOccurred()
+            }) {
+                Text("This is a Button")
+            }
     }
     
 }
